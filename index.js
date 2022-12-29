@@ -5,12 +5,20 @@ const createStore = redux.legacy_createStore;
 
 //Action
 const CAKE_ORDERED = "CAKE_ORDERED"; // constant
+const CAKE_RESTOCKED = "CAKE_RESTOCKED";
 
 function orderCake() {
   // action taker returns object
   return {
     type: CAKE_ORDERED, // type property action
-    quantity: 1,
+    payload: 1,
+  };
+}
+
+function restockCake(qty = 1) {
+  return {
+    type: CAKE_RESTOCKED,
+    payload: qty,
   };
 }
 
@@ -25,6 +33,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         numberOfCakes: state.numberOfCakes - 1,
+      };
+    case CAKE_RESTOCKED:
+      return {
+        ...state,
+        numberOfCakes: state.numberOfCakes + action.payload,
       };
     default:
       return state;
@@ -41,5 +54,7 @@ const unsubscribe = store.subscribe(() =>
 store.dispatch(orderCake()); //resposnsibility 3
 store.dispatch(orderCake());
 store.dispatch(orderCake());
+
+store.dispatch(restockCake(3));
 
 unsubscribe(); //resposnsibility 5

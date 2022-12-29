@@ -3,6 +3,7 @@ const redux = require("redux");
 // store
 const createStore = redux.legacy_createStore;
 const bindActionCreators = redux.bindActionCreators;
+const combineReducers = redux.combineReducers;
 
 //Action
 const CAKE_ORDERED = "CAKE_ORDERED"; // constant
@@ -25,10 +26,10 @@ function restockCake(qty = 1) {
   };
 }
 
-function orderIcecream(qty = 1) {
+function orderIcecream() {
   return {
     type: ICECREAM_ORDERED,
-    payload: qty,
+    payload: 1,
   };
 }
 
@@ -40,12 +41,19 @@ function restockIcecream(qty = 1) {
 }
 
 //Reducer
-const initialState = {
+// const initialState = {
+//   numberOfCakes: 10,
+//   numberOfIcecreams: 20,
+// };
+
+const initialCakeState = {
   numberOfCakes: 10,
-  numberOfIcecreams: 20,
+};
+const initialIcecreamState = {
+  numberOfIcecream: 20,
 };
 
-const reducer = (state = initialState, action) => {
+const cakeReducer = (state = initialCakeState, action) => {
   switch (action.type) {
     case CAKE_ORDERED:
       return {
@@ -57,22 +65,33 @@ const reducer = (state = initialState, action) => {
         ...state,
         numberOfCakes: state.numberOfCakes + action.payload,
       };
+    default:
+      return state;
+  }
+};
+const icecreamReducer = (state = initialIcecreamState, action) => {
+  switch (action.type) {
     case ICECREAM_ORDERED:
       return {
         ...state,
-        numberOfIcecreams: state.numberOfIcecreams - action.payload,
+        numberOfIcecreams: state.numberOfIcecream - 1,
       };
     case ICECREAM_RESTOCKED:
       return {
         ...state,
-        numberOfIcecreams: state.numberOfIcecreams + action.payload,
+        numberOfIcecreams: state.numberOfIcecream + action.payload,
       };
     default:
       return state;
   }
 };
 
-const store = createStore(reducer); //resposnsibility 1
+const rootReducer = combineReducers({
+  cake: cakeReducer,
+  icecream: icecreamReducer,
+});
+
+const store = createStore(rootReducer); //resposnsibility 1
 console.log("Initial State", store.getState()); //resposnsibility 2
 
 const unsubscribe = store.subscribe(() =>
@@ -94,7 +113,8 @@ actions.orderCake();
 actions.orderCake();
 actions.restockCake(3);
 
-actions.orderIcecream(2);
+actions.orderIcecream();
+actions.orderIcecream();
 actions.restockIcecream(2);
 
 unsubscribe(); //resposnsibility 5

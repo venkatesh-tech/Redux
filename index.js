@@ -23,7 +23,8 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case CAKE_ORDERED:
       return {
-        state: state.numberOfCakes - 1,
+        ...state,
+        numberOfCakes: state.numberOfCakes - 1,
       };
     default:
       return state;
@@ -31,9 +32,9 @@ const reducer = (state = initialState, action) => {
 };
 
 const store = createStore(reducer); //resposnsibility 1
-console.log("InitialState", store.getState()); //resposnsibility 2
+console.log("Initial State", store.getState()); //resposnsibility 2
 
-const unSubscribe = store.subscribe(() =>
+const unsubscribe = store.subscribe(() =>
   console.log("updated State ", store.getState())
 ); //resposnsibility 4
 
@@ -41,4 +42,4 @@ store.dispatch(orderCake()); //resposnsibility 3
 store.dispatch(orderCake());
 store.dispatch(orderCake());
 
-unSubscribe(); //resposnsibility 5
+unsubscribe(); //resposnsibility 5

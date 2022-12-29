@@ -2,6 +2,7 @@ const redux = require("redux");
 // const createStore = redux.createStore
 // store
 const createStore = redux.legacy_createStore;
+const bindActionCreators = redux.bindActionCreators;
 
 //Action
 const CAKE_ORDERED = "CAKE_ORDERED"; // constant
@@ -51,10 +52,16 @@ const unsubscribe = store.subscribe(() =>
   console.log("updated State ", store.getState())
 ); //resposnsibility 4
 
-store.dispatch(orderCake()); //resposnsibility 3
-store.dispatch(orderCake());
-store.dispatch(orderCake());
+// store.dispatch(orderCake()); //resposnsibility 3
+// store.dispatch(orderCake());
+// store.dispatch(orderCake());
 
-store.dispatch(restockCake(3));
+// store.dispatch(restockCake(3));
+
+const actions = bindActionCreators({ orderCake, restockCake }, store.dispatch);
+actions.orderCake();
+actions.orderCake();
+actions.orderCake();
+actions.restockCake(3);
 
 unsubscribe(); //resposnsibility 5
